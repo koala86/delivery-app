@@ -32,7 +32,9 @@ const foodStore = createSlice({
     // cart count--
     decreCount (state, action) {
       const item = state.cartList.find(item => item.id === action.payload.id)
-      if (item.count <= 0) {
+      console.log(state.cartList)
+      if (item.count === 1) {
+        state.cartList.pop(item.id)
         return
       }
       item.count--
