@@ -1,13 +1,14 @@
 import classNames from 'classnames'
 import Count from '../Count'
 import './index.scss'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { increCount, decreCount, clearCart } from '../../store/modules/takeaway'
 
 const Cart = () => {
   const { cartList } = useSelector(state => state.foods)
   const totalPrice = cartList.reduce((a,c) => a + c.price * c.count,0)
+  const dispatch = useDispatch()
 
-  const cart = []
   return (
     <div className="cartContainer">
       {/* オーバレイヤー visible追加で表示できる */}
@@ -38,17 +39,17 @@ const Cart = () => {
         )}
       </div>
       {/* visible追加で divを表示 */}
-      <div className={classNames('cartPanel')}>
+      <div className={classNames('cartPanel', 'visible')}>
         <div className="header">
           <span className="text">カート</span>
-          <span className="clearCart">
+          <span className="clearCart" onClick={() => dispatch(clearCart())}>
             カートクリア
           </span>
         </div>
 
         {/* カートリスト */}
         <div className="scrollArea">
-          {cart.map(item => {
+          {cartList.map(item => {
             return (
               <div className="cartItem" key={item.id}>
                 <img className="shopPic" src={item.picture} alt="" />
@@ -64,6 +65,8 @@ const Cart = () => {
                 <div className="skuBtnWrapper btnGroup">
                   <Count
                     count={item.count}
+                    onPlus={() => dispatch(increCount({id: item.id}))}
+                    onMinus={() => dispatch(decreCount({id: item.id}))}
                   />
                 </div>
               </div>
