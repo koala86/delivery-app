@@ -3,22 +3,32 @@ import Count from '../Count'
 import './index.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { increCount, decreCount, clearCart } from '../../store/modules/takeaway'
+import { useState } from 'react'
 
 const Cart = () => {
   const { cartList } = useSelector(state => state.foods)
   const totalPrice = cartList.reduce((a,c) => a + c.price * c.count,0)
   const dispatch = useDispatch()
 
+  // control visible lay
+  const [visible, setVisible] = useState(false);
+
+  const onShow = () => {
+    if (cartList.length > 0) {
+      setVisible(true);
+    }
+  }
   return (
     <div className="cartContainer">
       {/* オーバレイヤー visible追加で表示できる */}
       <div
-        className={classNames('cartOverlay')}
+        className={classNames('cartOverlay', visible && 'visible')}
+        onClick={() => setVisible(false)}
       />
       <div className="cart">
         {/* fill fill追加でカート表示を切り替える*/}
         {/* カート数量 */}
-        <div className={classNames('icon', cartList.length > 0 && 'fill')}>
+        <div onClick={onShow} className={classNames('icon', cartList.length > 0 && 'fill')}>
           {cartList.length > 0 && <div className="cartCornerMark">{cartList.length}</div>}
         </div>
         {/* カート金額 */}
@@ -39,7 +49,7 @@ const Cart = () => {
         )}
       </div>
       {/* visible追加で divを表示 */}
-      <div className={classNames('cartPanel', 'visible')}>
+      <div className={classNames('cartPanel', visible && 'visible')}>
         <div className="header">
           <span className="text">カート</span>
           <span className="clearCart" onClick={() => dispatch(clearCart())}>

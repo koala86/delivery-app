@@ -51,6 +51,7 @@ const { setFoodsList, changeActiveIndex, addCart, increCount, decreCount,clearCa
 const fetchFoodsList = () => {
   return async (dispatch) => {
     const res = await axios.get("http://localhost:3004/takeaway")
+    // const res = await axios.get("http://localhost:8000/delivery/takeaway/")
     dispatch(setFoodsList(res.data))
   };
 };
